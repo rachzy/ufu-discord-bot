@@ -1,0 +1,30 @@
+{
+  "name": "ufu-discord-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "start:dev": "nodemon ./dist/index.js",
+    "start:prod": "node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rachzy/ufu-discord-bot.git"
+  },
+  "keywords": [],
+  "author": "rachzy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rachzy/ufu-discord-bot/issues"
+  },
+  "homepage": "https://github.com/rachzy/ufu-discord-bot#readme",
+  "description": "",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "typescript": "^5.7.3"
+  }
+}
