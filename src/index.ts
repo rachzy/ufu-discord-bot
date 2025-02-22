@@ -1,8 +1,18 @@
 // Libs
-import { Client, Events, GatewayIntentBits, REST } from "discord.js";
+import {
+  Client,
+  Collection,
+  Events,
+  GatewayIntentBits,
+  Interaction,
+  MessageFlags,
+  REST,
+  Routes,
+} from "discord.js";
 import * as dotenv from "dotenv";
 
 import commands from "./commands";
+import { Command } from "./interfaces/command";
 
 // Setup env
 dotenv.config();
@@ -35,11 +45,33 @@ client.on(Events.ClientReady, async (readyClient) => {
   }
 });
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+  if (!interaction.isCommand()) return;
 
-  if (interaction.commandName === "ping") {
-    await interaction.reply("Pong!");
+  const command = await rest.get(
+    Routes.applicationGuildCommand(CLIENT_ID, GUILD_ID, interaction.commandId)
+  );
+
+  if (!command) {
+    console.error(`No command matching ${interaction.commandName} was found.`);
+    return;
+  }
+
+  try {
+    await commands.get(interaction.commandName)?.execute(interaction);
+  } catch (error) {
+    console.error(error);
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp({
+        content: "There was an error while executing this command!",
+        flags: [MessageFlags.Ephemeral],
+      });
+    } else {
+      await interaction.reply({
+        content: "There was an error while executing this command!",
+        flags: [MessageFlags.Ephemeral],
+      });
+    }
   }
 });
 
