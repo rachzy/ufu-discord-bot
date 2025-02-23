@@ -1,16 +1,12 @@
 // Libs
-import {
-  REST,
-  RESTPostAPIChatInputApplicationCommandsJSONBody,
-  Routes,
-} from "discord.js";
+import { REST, Routes } from "discord.js";
 import * as fs from "fs";
 import * as path from "path";
-import { Command } from "./interfaces/command";
+import { Command, CommandHandler } from "../interfaces/command.interface";
 
 const commands: Command[] = [];
 
-const foldersPath = path.join(__dirname, "commands");
+const foldersPath = path.join(__dirname, "../commands");
 const commandFiles = fs
   .readdirSync(foldersPath)
   .filter((file) => file.endsWith(".js")); // Read files will be compiled to .js
@@ -21,7 +17,7 @@ commandFiles.forEach((file) => {
   commands.push(command);
 });
 
-export default {
+module.exports = {
   register: async (rest: REST, clientID: string, guildID: string) => {
     console.log("Registering slash commands...");
 
@@ -35,4 +31,4 @@ export default {
   get: (commandName: string): Command | undefined => {
     return commands.find((command) => command.data.name === commandName);
   },
-};
+} as CommandHandler;
