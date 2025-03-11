@@ -1,12 +1,30 @@
-import { Client, EmbedBuilder, EmbedData, TextChannel } from "discord.js";
+import {
+  ActionRowBuilder,
+  ActionRowComponentData,
+  APIActionRowComponentTypes,
+  Client,
+  ComponentType,
+  EmbedBuilder,
+  EmbedData,
+  JSONEncodable,
+  RoleSelectMenuBuilder,
+  SelectMenuBuilder,
+  StringSelectMenuBuilder,
+  TextChannel,
+} from "discord.js";
 import { SpecialEvent } from "../../interfaces/event.interface";
-import { AutoMessage } from "../../interfaces/auto-message";
+import { AutoMessage } from "../../interfaces/automessage.interface";
 
 import * as path from "path";
 import * as fs from "fs";
 
 const FALLBACK_THUMBNAIL =
   "https://cdn.discordapp.com/app-icons/1342684505432916008/b6837e558d2c678715023f546d2d4667.png?size=256";
+
+const MENU_BUILDERS = {
+  [ComponentType.StringSelect]: StringSelectMenuBuilder,
+  [ComponentType.RoleSelect]: RoleSelectMenuBuilder,
+} as const;
 
 function buildEmbedMessage(
   client: Client<true>,
@@ -15,7 +33,6 @@ function buildEmbedMessage(
   const embedData: EmbedData = {
     author: {
       name: "r/UFU | Mensagem Automática",
-      iconURL: client.user.avatarURL() || undefined,
     },
     color: 2123412, // Dark blue
     thumbnail: {
@@ -40,24 +57,49 @@ const autoMessageEvent: SpecialEvent = {
 
     messageFiles.forEach(async (file) => {
       const filePath = path.join(foldersPath, file);
-      const message: AutoMessage = require(filePath);
+      let message: AutoMessage = require(filePath);
+
+      if (message.type === "callback") {
+        message = await message.callback(client);
+      }
 
       const channel = client.channels.cache.get(
         message.channelID
       ) as TextChannel;
       if (!channel || !channel.isTextBased() || !channel.isSendable()) return;
 
-      const messageCollections = await channel.messages.fetch({ limit: 1 });
-      if (messageCollections.size > 0) return; // Already sent
+      const messageCollections = await channel.messages.fetch({
+        limit: message.amountOfMessagesRequired ?? 1,
+      });
+      if (messageCollections.size > (message.amountOfMessagesRequired ?? 0))
+        return; // Already sent
 
-      switch (message.type) {
-        case "embed":
-          const embedMessage = buildEmbedMessage(client, message.data);
-          channel.send({ embeds: [embedMessage] });
-          break;
-        default:
-          break;
+      const embedMessage = buildEmbedMessage(client, message.embedData);
+
+      if (message.type === "text") {
+        channel.send({ embeds: [embedMessage] });
+        return;
       }
+
+      const components: (
+        | JSONEncodable<APIActionRowComponentTypes>
+        | ActionRowComponentData
+      )[] = [];
+
+      const component = new MENU_BUILDERS[message.type](
+        message.componentData as any // Make ts happy :D
+      );
+      components.push(component);
+
+      const row = new ActionRowBuilder<SelectMenuBuilder>({
+        components,
+        type: ComponentType.ActionRow,
+      });
+
+      channel.send({
+        embeds: [embedMessage],
+        components: [row],
+      });
     });
   },
 };

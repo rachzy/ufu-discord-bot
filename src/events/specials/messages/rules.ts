@@ -1,11 +1,11 @@
-import { AutoMessage } from "../../../interfaces/auto-message";
+import { AutoMessage } from "../../../interfaces/automessage.interface";
 
 import { guild } from "../../../../config.json";
 
 module.exports = {
   channelID: guild.channels.rules,
-  type: "embed",
-  data: {
+  type: "text",
+  embedData: {
     title: "Regras da Comunidade",
     description: `Todo membro, ao entrar no servidor, é convidado a ler as regras.
     \nAssim como o Código Penal, você não é obrigado a lê-las integralmente, mas o desconhecimento de uma regra não abonará sua punição
