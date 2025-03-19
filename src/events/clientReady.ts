@@ -9,7 +9,7 @@ const automessages = require("./specials/automessages") as SpecialEvent;
 
 const clientReadyEvent: Event = {
   event: Events.ClientReady,
-  register: async (client: Client<true>) => {
+  execute: async (client: Client<true>) => {
     console.log(`Logged in as ${client.user.tag}`);
 
     try {

@@ -2,7 +2,7 @@ import { Client, ClientEvents } from "discord.js";
 
 export interface Event {
   event: keyof ClientEvents;
-  register: (...args: any[]) => void;
+  execute: (...args: any[]) => void;
 }
 
 export interface SpecialEvent {

@@ -1,15 +1,32 @@
-import { Client, Events, Interaction, MessageFlags } from "discord.js";
+import {
+  Client,
+  Events,
+  Interaction,
+  InteractionType,
+  MessageFlags,
+} from "discord.js";
 import { Event } from "../interfaces/event.interface";
 import { CommandHandler } from "../interfaces/command.interface";
 
+import { join } from "path";
+import { readdirSync } from "fs";
+import { ClientInteraction } from "../interfaces/interaction.interface";
+
 const commands = require("../handlers/commands") as CommandHandler;
+
+const interactionsDirectory = join(__dirname, "./specials/interactions");
+const interactionFiles = readdirSync(interactionsDirectory).filter((file) =>
+  file.endsWith(".js")
+);
+const clientInteractions = interactionFiles.map(
+  (file) => require(join(interactionsDirectory, file)) as ClientInteraction
+);
 
 const interactionCreateEvent: Event = {
   event: Events.InteractionCreate,
-  register: async (client: Client<true>) => {
-    client.on(Events.InteractionCreate, async (interaction: Interaction) => {
-      if (!interaction.isCommand()) return;
-
+  execute: async (interaction: Interaction) => {
+    // Command handler
+    if (interaction.isCommand()) {
       try {
         await commands.get(interaction.commandName)?.execute(interaction);
       } catch (error) {
@@ -26,7 +43,18 @@ const interactionCreateEvent: Event = {
           });
         }
       }
-    });
+      return;
+    }
+
+    // Client interactions handler
+    if (interaction.type === InteractionType.MessageComponent) {
+      const targetInteraction = clientInteractions.find(
+        (clientInteraction) => clientInteraction.id === interaction.customId
+      );
+
+      if (!targetInteraction) return;
+      await targetInteraction.callback(interaction);
+    }
   },
 };
 
