@@ -11,11 +11,11 @@ import {
   TextChannel,
 } from "discord.js";
 import { SpecialEvent } from "../../interfaces/event.interface";
-import { CustomMessage } from "../../interfaces/customMessage.interface";
+import { CustomMessage } from "../../interfaces/custom-message.interface";
 
 import * as path from "path";
 import * as fs from "fs";
-import { buildEmbedMessage } from "../../helpers/buildEmbedMessage";
+import { buildEmbedMessage } from "../../helpers/build-embed-message";
 
 const MENU_BUILDERS = {
   [ComponentType.StringSelect]: StringSelectMenuBuilder,

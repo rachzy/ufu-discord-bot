@@ -9,7 +9,7 @@ import config from "../../../../config.json";
 import {
   buildErrorMessage,
   buildSuccessMessage,
-} from "../../../helpers/buildEmbedMessage";
+} from "../../../helpers/build-embed-message";
 
 module.exports = {
   id: "campus-select",

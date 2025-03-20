@@ -1,4 +1,4 @@
-import { CustomMessage } from "../interfaces/customMessage.interface";
+import { CustomMessage } from "../interfaces/custom-message.interface";
 
 import { guild } from "../../config.json";
 
