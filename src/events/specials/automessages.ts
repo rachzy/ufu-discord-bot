@@ -11,7 +11,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { SpecialEvent } from "../../interfaces/event.interface";
-import { AutoMessage } from "../../interfaces/automessage.interface";
+import { CustomMessage } from "../../interfaces/customMessage.interface";
 
 import * as path from "path";
 import * as fs from "fs";
@@ -24,18 +24,20 @@ const MENU_BUILDERS = {
 
 const autoMessageEvent: SpecialEvent = {
   execute: async (client: Client<true>) => {
-    const foldersPath = path.join(__dirname, "messages");
+    const foldersPath = path.join(__dirname, "../../messages");
     const messageFiles = fs
       .readdirSync(foldersPath)
       .filter((file) => file.endsWith(".js")); // Read files will be compiled to .js
 
     messageFiles.forEach(async (file) => {
       const filePath = path.join(foldersPath, file);
-      let message: AutoMessage = require(filePath);
+      let message: CustomMessage = require(filePath);
 
       if (message.type === "callback") {
         message = await message.callback(client);
       }
+
+      if (!message.isAutomatic) return;
 
       const channel = client.channels.cache.get(
         message.channelID
@@ -43,7 +45,9 @@ const autoMessageEvent: SpecialEvent = {
       if (!channel || !channel.isTextBased() || !channel.isSendable()) return;
 
       const messageCollections = await channel.messages.fetch({
-        limit: message.amountOfMessagesRequired ?? 1,
+        limit: message.amountOfMessagesRequired
+          ? message.amountOfMessagesRequired + 1
+          : 1,
       });
       if (messageCollections.size > (message.amountOfMessagesRequired ?? 0))
         return; // Already sent

@@ -1,15 +1,16 @@
-import { AutoMessage } from "../../../interfaces/automessage.interface";
+import { CustomMessage } from "../interfaces/customMessage.interface";
 
-import { guild } from "../../../../config.json";
-import { ComponentType } from "discord.js";
+import { guild } from "../../config.json";
+import { Client, ComponentType } from "discord.js";
 
 module.exports = {
   type: "callback",
-  callback: async (client) => {
+  callback: async (client: Client<true>) => {
     const roles = await client.guilds.cache.get(guild.id)?.roles.fetch();
     const campusRoles = roles?.filter((role) => role.name.includes("[C]"));
 
     return {
+      isAutomatic: true,
       channelID: guild.channels.roles,
       type: ComponentType.StringSelect,
       embedData: {
@@ -27,4 +28,4 @@ module.exports = {
       },
     };
   },
-} as AutoMessage;
+} as CustomMessage;

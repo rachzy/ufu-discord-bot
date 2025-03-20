@@ -1,8 +1,9 @@
-import { AutoMessage } from "../../../interfaces/automessage.interface";
+import { CustomMessage } from "../interfaces/customMessage.interface";
 
-import { guild } from "../../../../config.json";
+import { guild } from "../../config.json";
 
 module.exports = {
+  isAutomatic: true,
   channelID: guild.channels.rules,
   type: "text",
   embedData: {
@@ -48,4 +49,4 @@ module.exports = {
       },
     ],
   },
-} as AutoMessage;
+} as CustomMessage;
