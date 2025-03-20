@@ -4,8 +4,6 @@ import {
   APIActionRowComponentTypes,
   Client,
   ComponentType,
-  EmbedBuilder,
-  EmbedData,
   JSONEncodable,
   RoleSelectMenuBuilder,
   SelectMenuBuilder,
@@ -17,36 +15,12 @@ import { AutoMessage } from "../../interfaces/automessage.interface";
 
 import * as path from "path";
 import * as fs from "fs";
-
-const FALLBACK_THUMBNAIL =
-  "https://cdn.discordapp.com/app-icons/1342684505432916008/b6837e558d2c678715023f546d2d4667.png?size=256";
+import { buildEmbedMessage } from "../../helpers/buildEmbedMessage";
 
 const MENU_BUILDERS = {
   [ComponentType.StringSelect]: StringSelectMenuBuilder,
   [ComponentType.RoleSelect]: RoleSelectMenuBuilder,
 } as const;
-
-function buildEmbedMessage(
-  client: Client<true>,
-  data: EmbedData
-): EmbedBuilder {
-  const embedData: EmbedData = {
-    author: {
-      name: "r/UFU | Mensagem Automática",
-    },
-    color: 2123412, // Dark blue
-    thumbnail: {
-      url: client.user.avatarURL() ?? FALLBACK_THUMBNAIL,
-    },
-    footer: {
-      text: "UFU | Um bem comunitário a serviço do Brasil",
-      iconURL: client.user.avatarURL() || undefined,
-    },
-    ...data,
-  };
-  const embedMessage = new EmbedBuilder(embedData);
-  return embedMessage;
-}
 
 const autoMessageEvent: SpecialEvent = {
   execute: async (client: Client<true>) => {

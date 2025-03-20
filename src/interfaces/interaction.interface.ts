@@ -1,6 +1,6 @@
 import { Interaction } from "discord.js";
 
-export type CLIENT_INTERACTION_IDS = "campus-select";
+export type CLIENT_INTERACTION_IDS = "campus-select" | "institute-select";
 
 export interface ClientInteraction {
   id: CLIENT_INTERACTION_IDS;
