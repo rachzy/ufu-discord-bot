@@ -7,7 +7,7 @@ import { guild } from "../../config.json";
 const commands = require("../handlers/commands") as CommandHandler;
 const automessages = require("./specials/automessages") as SpecialEvent;
 
-const clientReadyEvent: Event = {
+module.exports = {
   event: Events.ClientReady,
   execute: async (client: Client<true>) => {
     console.log(`Logged in as ${client.user.tag}`);
@@ -19,6 +19,4 @@ const clientReadyEvent: Event = {
       console.error(error);
     }
   },
-};
-
-module.exports = clientReadyEvent;
+} as Event;

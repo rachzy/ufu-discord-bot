@@ -22,7 +22,7 @@ const clientInteractions = interactionFiles.map(
   (file) => require(join(interactionsDirectory, file)) as ClientInteraction
 );
 
-const interactionCreateEvent: Event = {
+module.exports = {
   event: Events.InteractionCreate,
   execute: async (interaction: Interaction) => {
     // Command handler
@@ -56,6 +56,4 @@ const interactionCreateEvent: Event = {
       await targetInteraction.callback(interaction);
     }
   },
-};
-
-module.exports = interactionCreateEvent;
+} as Event;
