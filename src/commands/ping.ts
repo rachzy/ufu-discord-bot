@@ -1,12 +1,20 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  CommandInteraction,
+  MessageFlags,
+  SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "../interfaces/command.interface";
 
 const command: Command = {
   data: new SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Replies with Pong!"),
+    .setDescription("Verifica a latência do bot."),
   execute: async (interaction: CommandInteraction) => {
-    await interaction.reply("Pong!");
+    const startTime = Date.now();
+    await interaction.deferReply({
+      flags: [MessageFlags.Ephemeral],
+    });
+    await interaction.editReply(`Pong! \n*${Date.now() - startTime}ms*`);
   },
 };
 
