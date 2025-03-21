@@ -32,7 +32,7 @@ type RoleSelectMessage = MessageBase & {
   componentData: RoleSelectMenuComponentData;
 };
 
-type CallbackMessage = {
+export type CallbackMessage = {
   type: "callback";
   callback: (...args: any[]) => Promise<PlainMessage> | PlainMessage;
 };

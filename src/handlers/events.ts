@@ -16,7 +16,7 @@ const events = eventFiles.map(
 module.exports = {
   register: async (client: Client<true>) => {
     events.forEach((event) => {
-      client.on(event.event, (...args) => event.execute(...args))
+      client.on(event.event, (...args) => event.execute(...args));
     });
   },
 } as EventHandler;

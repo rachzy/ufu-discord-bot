@@ -15,8 +15,9 @@ if (!DISCORD_TOKEN) {
   throw new Error("Discord Token wasn't provided");
 }
 
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+});
 
 events.register(client);
 
