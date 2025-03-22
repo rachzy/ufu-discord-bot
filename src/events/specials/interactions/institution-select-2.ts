@@ -12,7 +12,7 @@ import {
 } from "../../../helpers/build-embed-message";
 
 module.exports = {
-  id: "institute-select",
+  id: "institution-select-2",
   callback: async (interaction: StringSelectMenuInteraction) => {
     const { client, member, guild } = interaction;
     if (!member) return;

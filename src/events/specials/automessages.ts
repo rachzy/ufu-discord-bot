@@ -49,7 +49,7 @@ const autoMessageEvent: SpecialEvent = {
           ? message.amountOfMessagesRequired + 1
           : 1,
       });
-      if (messageCollections.size > (message.amountOfMessagesRequired ?? 0))
+      if (messageCollections.size !== (message.amountOfMessagesRequired ?? 0))
         return; // Already sent
 
       const embedMessage = buildEmbedMessage(client, message.embedData);

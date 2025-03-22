@@ -39,7 +39,14 @@ module.exports = {
     if (interaction.isCommand()) {
       try {
         const { channelId } = interaction;
-        if (channelId !== config.guild.channels.commands) {
+        const targetCommand = commands.get(interaction.commandName);
+
+        if (!targetCommand) return;
+
+        if (
+          targetCommand.requireCommandChannel &&
+          channelId !== config.guild.channels.commands
+        ) {
           const errorMessage = createEmbedErrorMessage(
             interaction.client,
             `Comandos só podem ser executados no canal <#${config.guild.channels.commands}>.`
@@ -50,7 +57,7 @@ module.exports = {
           });
         }
 
-        await commands.get(interaction.commandName)?.execute(interaction);
+        await targetCommand.execute(interaction);
       } catch (error) {
         console.error(error);
 

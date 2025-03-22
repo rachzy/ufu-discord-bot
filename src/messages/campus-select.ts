@@ -14,7 +14,7 @@ module.exports = {
       channelID: guild.channels.roles,
       type: ComponentType.StringSelect,
       embedData: {
-        title: "Campus",
+        title: "🌳 Campus",
         description: "Selecione seu campus",
       },
       componentData: {
