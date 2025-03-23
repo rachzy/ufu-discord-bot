@@ -1,5 +1,4 @@
 import {
-  Client,
   ComponentType,
   EmbedData,
   RoleSelectMenuComponentData,
